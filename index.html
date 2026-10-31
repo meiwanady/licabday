@@ -152,7 +152,8 @@
   .sc-card { position: relative; width: min(100%, 360px); aspect-ratio: 4/5; max-height: 68vh; border-radius: 18px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,.18); background: #efefef; }
   .sc-under { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: linear-gradient(135deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5); }
   .sc-under img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .sc-msg { position: relative; z-index: 1; width: 100%; padding: 20px 18px; color: #fff; font-weight: 800; font-size: 22px; line-height: 1.3; white-space: pre-line; text-shadow: 0 2px 8px rgba(0,0,0,.3); }
+  .sc-msg { position: relative; z-index: 1; width: 100%; padding: 20px 18px; color: #fff; font-weight: 800; font-size: 22px; line-height: 1.3; white-space: pre-line; text-shadow: 0 2px 8px rgba(0,0,0,.3); opacity: 0; transform: translateY(16px); transition: opacity .8s ease .5s, transform .8s ease .5s; }
+  .sc-under.revealed .sc-msg { opacity: 1; transform: none; }
   .sc-under.has-img { justify-content: flex-end; }
   .sc-under.has-img .sc-msg { padding-top: 40px; background: linear-gradient(transparent, rgba(0,0,0,.7)); }
   .sc-cover { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: grab; }
@@ -756,6 +757,7 @@ function checkScratch() {
 }
 function revealScratch() {
   sc.done = true;
+  $("scUnder").classList.add("revealed");
   scv.style.transition = "opacity .7s ease"; scv.style.opacity = 0; scv.style.pointerEvents = "none";
   $("scHint").textContent = "You found it! 🎉";
   confettiBurst();
