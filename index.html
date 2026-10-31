@@ -277,11 +277,12 @@ const CONFIG = {
   followers: "1,105",
   following: "25",
 
-  // Secret scratch-card post (first tile in the grid). Delete this whole block to remove it.
+  // Secret scratch-card post. It replaces the grid tile of the post whose "img" matches the one below.
+  // Delete this whole block to remove it.
   secret: {
     label: "Secret!",
     title: "Secret post",
-    img: "",   // optional photo under the glitter, e.g. "images/your-photo.jpg"
+    img: "images/20171026_155457.jpg",   // must match that post's img exactly; shown under the glitter
     message: "Surprise! 🎉\nYou found the secret post.\nHappy Birthday, Celica! 💛"
   },
 
@@ -551,17 +552,18 @@ CONFIG.highlights.forEach(h => {
   $("highlights").appendChild(el);
 });
 
-// secret scratch tile (first in grid)
-if (CONFIG.secret) {
-  const sCell = document.createElement("div");
-  sCell.className = "cell secret";
-  sCell.innerHTML = `<div><div class="sparkle">🎁</div>${CONFIG.secret.label || "Secret!"}<small>tap to scratch</small></div>`;
-  sCell.onclick = openScratch;
-  $("grid").appendChild(sCell);
-}
-
 // grid
 CONFIG.posts.forEach((p, i) => {
+  // the secret post: same shimmer tile, opens the scratch card
+  if (CONFIG.secret && p.img === CONFIG.secret.img) {
+    const sCell = document.createElement("div");
+    sCell.className = "cell secret";
+    sCell.innerHTML = `<div><div class="sparkle">🎁</div>${CONFIG.secret.label || "Secret!"}<small>tap to scratch</small></div>`;
+    sCell.onclick = openScratch;
+    $("grid").appendChild(sCell);
+    return;
+  }
+
   const cell = document.createElement("div");
   cell.className = "cell";
   const img = document.createElement("img");
