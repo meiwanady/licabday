@@ -116,7 +116,7 @@
   .subs { margin-top: 16px; padding: 0 24px; display: flex; flex-direction: column; gap: 8px; }
   .subs div { font-size: 16px; font-weight: 700; color: #262626; background: rgba(255,255,255,.92); border-radius: 14px; padding: 8px 14px; box-shadow: 0 2px 10px rgba(0,0,0,.12); opacity: 0; animation: subIn .5s ease forwards; }
   @keyframes subIn { from { opacity: 0; transform: translateY(14px) scale(.9); } to { opacity: 1; transform: none; } }
-  #confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 40; }
+  #confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 60; }
   .bday { position: fixed; inset: 0; z-index: 35; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; pointer-events: none; opacity: 0; }
   .bday.show { animation: bdayIn 5.6s ease forwards; }
   .bday .big { font-size: 46px; font-weight: 800; line-height: 1.1; padding: 0 16px; background: linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 2px 6px rgba(0,0,0,.15)); }
@@ -129,6 +129,34 @@
     88%  { opacity: 1; transform: scale(1); }
     100% { opacity: 0; transform: scale(1.1); }
   }
+
+  /* follower counter animation */
+  .stats > div { position: relative; }
+  .stats b.bump { animation: numPop .7s ease; }
+  @keyframes numPop { 0% { transform: scale(1); } 35% { transform: scale(1.6); color: #ff3040; } 100% { transform: scale(1); } }
+  .fh { position: absolute; top: 0; left: 50%; font-size: 15px; font-weight: 800; white-space: nowrap; pointer-events: none; opacity: 0; z-index: 6; animation: fh 1.5s ease-out forwards; }
+  @keyframes fh {
+    0%   { opacity: 0; transform: translate(-50%, 0) scale(.6); }
+    15%  { opacity: 1; }
+    100% { opacity: 0; transform: translate(calc(-50% + var(--dx, 0px)), -75px) scale(1.25); }
+  }
+
+  /* secret scratch card */
+  .cell.secret { background: linear-gradient(135deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5); background-size: 200% 200%; animation: shimmer 4s ease infinite; display: flex; align-items: center; justify-content: center; text-align: center; color: #fff; font-weight: 800; font-size: 13px; line-height: 1.25; text-shadow: 0 1px 4px rgba(0,0,0,.25); }
+  .cell.secret .sparkle { font-size: 26px; animation: wiggle .8s ease-in-out infinite alternate; }
+  .cell.secret small { display: block; font-size: 10px; font-weight: 600; opacity: .95; margin-top: 2px; }
+  @keyframes shimmer { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+  .scratch-view { position: fixed; inset: 0; z-index: 55; background: #fff; display: none; flex-direction: column; max-width: 480px; margin: 0 auto; overflow-y: auto; }
+  .scratch-view.open { display: flex; }
+  .sc-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 12px 16px 28px; }
+  .sc-card { position: relative; width: min(100%, 360px); aspect-ratio: 4/5; max-height: 68vh; border-radius: 18px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,.18); background: #efefef; }
+  .sc-under { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: linear-gradient(135deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5); }
+  .sc-under img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .sc-msg { position: relative; z-index: 1; width: 100%; padding: 20px 18px; color: #fff; font-weight: 800; font-size: 22px; line-height: 1.3; white-space: pre-line; text-shadow: 0 2px 8px rgba(0,0,0,.3); }
+  .sc-under.has-img { justify-content: flex-end; }
+  .sc-under.has-img .sc-msg { padding-top: 40px; background: linear-gradient(transparent, rgba(0,0,0,.7)); }
+  .sc-cover { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+  .sc-hint { font-size: 14px; color: #737373; text-align: center; }
 </style>
 </head>
 <body>
@@ -213,6 +241,21 @@
   <div class="s-tap r" id="sNext"></div>
 </div>
 
+<!-- secret scratch card -->
+<div class="scratch-view" id="scratch">
+  <div class="vbar">
+    <button class="back" id="scBack" aria-label="Back"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <div class="title" id="scTitle">Secret post</div>
+  </div>
+  <div class="sc-body">
+    <div class="sc-card">
+      <div class="sc-under" id="scUnder"><div class="sc-msg" id="scMsg"></div></div>
+      <canvas class="sc-cover" id="scCanvas"></canvas>
+    </div>
+    <div class="sc-hint" id="scHint">Scratch the glitter with your finger 👆</div>
+  </div>
+</div>
+
 <canvas id="confetti"></canvas>
 <div class="bday" id="bday">
   <div class="emoji">🎂</div>
@@ -233,6 +276,14 @@ const CONFIG = {
   avatar: "images/20260103_165251.jpg",          // profile picture
   followers: "1,105",
   following: "25",
+
+  // Secret scratch-card post (first tile in the grid). Delete this whole block to remove it.
+  secret: {
+    label: "Secret!",
+    title: "Secret post",
+    img: "",   // optional photo under the glitter, e.g. "images/your-photo.jpg"
+    message: "Surprise! 🎉\nYou found the secret post.\nHappy Birthday, Celica! 💛"
+  },
 
   // Round story-style circles under the buttons (optional, can be empty: [])
   highlights: [
@@ -425,6 +476,7 @@ $("followBtn").onclick = () => {
   $("followBtn").classList.toggle("primary", !following);
   $("hint").classList.add("hide");
   $("followBtn").classList.remove("pulse");
+  bumpFollowers(following);
   if (following) celebrate();
 };
 
@@ -439,7 +491,7 @@ const LINES = [
   "Another year of being iconic 👑",
   "Age is just a number, but you're a VIP number 💖",
   "Plot twist: you just get better every year 🎬",
-  "Party mode: ON 🎈"
+  "Party mode: ON 🎈 Diet mode: OFF 🙈"
 ];
 
 // confetti + birthday message
@@ -448,7 +500,10 @@ function celebrate() {
   const picks = LINES.slice().sort(() => Math.random() - .5).slice(0, 3);
   $("subs").innerHTML = picks.map((t, k) => `<div style="animation-delay:${0.9 + k * 0.9}s">${t}</div>`).join("");
   b.classList.remove("show"); void b.offsetWidth; b.classList.add("show");
+  confettiBurst();
+}
 
+function confettiBurst() {
   const cv = $("confetti"), ctx = cv.getContext("2d");
   const dpr = window.devicePixelRatio || 1;
   cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
@@ -495,6 +550,15 @@ CONFIG.highlights.forEach(h => {
   el.onclick = () => (h.videos && h.videos.length) ? openStory(h) : toast(h.label);
   $("highlights").appendChild(el);
 });
+
+// secret scratch tile (first in grid)
+if (CONFIG.secret) {
+  const sCell = document.createElement("div");
+  sCell.className = "cell secret";
+  sCell.innerHTML = `<div><div class="sparkle">🎁</div>${CONFIG.secret.label || "Secret!"}<small>tap to scratch</small></div>`;
+  sCell.onclick = openScratch;
+  $("grid").appendChild(sCell);
+}
 
 // grid
 CONFIG.posts.forEach((p, i) => {
@@ -606,6 +670,109 @@ $("sMute").onclick = () => {
   $("sMute").textContent = story.muted ? "🔇" : "🔊";
 };
 window.addEventListener("popstate", closeStory);
+window.addEventListener("popstate", closeScratch);
+
+// ---------- follower counter ----------
+const baseFollowers = parseInt(String(CONFIG.followers).replace(/\D/g, ""), 10) || 0;
+function bumpFollowers(up) {
+  const el = $("sFollowers");
+  el.textContent = (baseFollowers + (up ? 1 : 0)).toLocaleString("en-US");
+  el.classList.remove("bump"); void el.offsetWidth; el.classList.add("bump");
+  if (up) floatHearts(el.parentElement);
+}
+function floatHearts(host) {
+  const em = ["❤️", "💖", "💗", "💕", "💛", "🧡"];
+  for (let k = 0; k < 8; k++) {
+    const s = document.createElement("span");
+    s.className = "fh";
+    s.textContent = k === 0 ? "+1 ❤️" : em[k % em.length];
+    s.style.left = (k === 0 ? 50 : 15 + Math.random() * 70) + "%";
+    s.style.animationDelay = (k * 0.09) + "s";
+    s.style.setProperty("--dx", ((Math.random() - .5) * 50) + "px");
+    host.appendChild(s);
+    setTimeout(() => s.remove(), 2300);
+  }
+}
+
+// ---------- secret scratch card ----------
+const sc = { drawing: false, done: false, last: null, lastCheck: 0 };
+const scv = $("scCanvas"), sctx = scv.getContext("2d", { willReadFrequently: true });
+
+if (CONFIG.secret) {
+  $("scTitle").textContent = CONFIG.secret.title || "Secret post";
+  $("scMsg").textContent = CONFIG.secret.message || "";
+  if (CONFIG.secret.img) {
+    const im = document.createElement("img");
+    im.src = CONFIG.secret.img; im.alt = "";
+    im.onerror = () => im.remove();
+    $("scUnder").prepend(im);
+    $("scUnder").classList.add("has-img");
+  }
+}
+
+function paintCover() {
+  const r = scv.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  scv.width = Math.round(r.width * dpr); scv.height = Math.round(r.height * dpr);
+  sctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  sctx.globalCompositeOperation = "source-over";
+  const g = sctx.createLinearGradient(0, 0, r.width, r.height);
+  g.addColorStop(0, "#c9c9d6"); g.addColorStop(.3, "#f4f4fb"); g.addColorStop(.55, "#b9b3d6"); g.addColorStop(.8, "#f7e6f2"); g.addColorStop(1, "#c3c9e6");
+  sctx.fillStyle = g; sctx.fillRect(0, 0, r.width, r.height);
+  for (let k = 0; k < 320; k++) {
+    sctx.fillStyle = `rgba(255,255,255,${.3 + Math.random() * .6})`;
+    const z = 1 + Math.random() * 2.5;
+    sctx.fillRect(Math.random() * r.width, Math.random() * r.height, z, z);
+  }
+  sctx.fillStyle = "#7a6fa0"; sctx.textAlign = "center";
+  sctx.font = "800 24px -apple-system, Segoe UI, Roboto, sans-serif";
+  sctx.fillText("✨ SCRATCH ME ✨", r.width / 2, r.height / 2);
+  sctx.font = "600 14px -apple-system, Segoe UI, Roboto, sans-serif";
+  sctx.fillText("a little surprise inside", r.width / 2, r.height / 2 + 28);
+  scv.style.transition = "none"; scv.style.opacity = 1; scv.style.pointerEvents = "auto";
+}
+
+function openScratch() {
+  $("scratch").classList.add("open");
+  history.pushState({ scratch: true }, "");
+  if (!sc.done) requestAnimationFrame(paintCover);
+}
+function closeScratch() { $("scratch").classList.remove("open"); }
+$("scBack").onclick = () => history.back();
+
+function scratchAt(x, y) {
+  const r = scv.getBoundingClientRect();
+  sctx.globalCompositeOperation = "destination-out";
+  sctx.beginPath(); sctx.arc(x - r.left, y - r.top, 26, 0, 6.2832); sctx.fill();
+}
+function checkScratch() {
+  if (sc.done) return;
+  const w = scv.width, h = scv.height;
+  const d = sctx.getImageData(0, 0, w, h).data;
+  let clear = 0, total = 0;
+  for (let y = 0; y < h; y += 12) for (let x = 0; x < w; x += 12) { total++; if (d[(y * w + x) * 4 + 3] < 40) clear++; }
+  if (clear / total > 0.5) revealScratch();
+}
+function revealScratch() {
+  sc.done = true;
+  scv.style.transition = "opacity .7s ease"; scv.style.opacity = 0; scv.style.pointerEvents = "none";
+  $("scHint").textContent = "You found it! 🎉";
+  confettiBurst();
+}
+scv.addEventListener("pointerdown", e => {
+  sc.drawing = true; sc.last = [e.clientX, e.clientY];
+  scv.setPointerCapture(e.pointerId); scratchAt(e.clientX, e.clientY); e.preventDefault();
+});
+scv.addEventListener("pointermove", e => {
+  if (!sc.drawing) return;
+  const [lx, ly] = sc.last, dx = e.clientX - lx, dy = e.clientY - ly, n = Math.max(1, Math.ceil(Math.hypot(dx, dy) / 10));
+  for (let i = 1; i <= n; i++) scratchAt(lx + dx * i / n, ly + dy * i / n);
+  sc.last = [e.clientX, e.clientY];
+  const now = performance.now();
+  if (now - sc.lastCheck > 350) { sc.lastCheck = now; checkScratch(); }
+});
+const endScratch = () => { if (!sc.drawing) return; sc.drawing = false; checkScratch(); };
+scv.addEventListener("pointerup", endScratch);
+scv.addEventListener("pointercancel", endScratch);
 
 function toast(msg) {
   const t = $("toast"); t.textContent = msg; t.classList.add("show");
