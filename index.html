@@ -196,11 +196,12 @@ const CONFIG = {
 const $ = id => document.getElementById(id);
 const FALLBACKS = ["#feda75","#fa7e1e","#d62976","#962fbf","#4f5bd5","#0095f6"];
 
-function fallback(img, i) {
+function fallback(img, i, tall) {
   img.onerror = () => {
     img.removeAttribute("src");
+    img.alt = "";
     img.style.background = `linear-gradient(135deg, ${FALLBACKS[i % 6]}, ${FALLBACKS[(i + 2) % 6]})`;
-    img.style.minHeight = "200px";
+    if (tall) { img.style.minHeight = "360px"; img.style.width = "100%"; }
   };
 }
 
@@ -253,7 +254,7 @@ function openPost(i) {
   $("vUser").textContent = CONFIG.username;
   $("vUser2").textContent = CONFIG.username;
   $("vImg").removeAttribute("style");
-  $("vImg").src = p.img; fallback($("vImg"), i);
+  $("vImg").src = p.img; fallback($("vImg"), i, true);
   $("vCaption").textContent = p.caption || "";
   $("vDate").textContent = p.date || "";
   $("vComments").innerHTML = (p.comments || []).map(c => `<div><b>${c.user}</b> ${c.text}</div>`).join("");
