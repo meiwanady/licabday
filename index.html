@@ -80,6 +80,35 @@
 
   .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #262626; color: #fff; padding: 10px 18px; border-radius: 20px; font-size: 14px; opacity: 0; transition: opacity .3s; z-index: 30; pointer-events: none; }
   .toast.show { opacity: 1; }
+
+  /* "Push me!" hint */
+  .actions { margin-top: 30px; }
+  .follow-wrap { position: relative; flex: 1; display: flex; }
+  .follow-wrap .btn { flex: 1; }
+  .hint { position: absolute; left: 50%; top: -32px; transform: translateX(-50%); background: #262626; color: #fff; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 12px; white-space: nowrap; pointer-events: none; animation: bob 1s ease-in-out infinite; }
+  .hint::after { content: ""; position: absolute; left: 50%; bottom: -5px; margin-left: -5px; border: 5px solid transparent; border-bottom: 0; border-top-color: #262626; }
+  .hint.hide { display: none; }
+  @keyframes bob { 0%,100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -6px); } }
+  .btn.pulse { animation: pulse 1.4s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(0,149,246,.5); } 50% { box-shadow: 0 0 0 8px rgba(0,149,246,0); } }
+
+  /* birthday celebration */
+  .subs { margin-top: 16px; padding: 0 24px; display: flex; flex-direction: column; gap: 8px; }
+  .subs div { font-size: 16px; font-weight: 700; color: #262626; background: rgba(255,255,255,.92); border-radius: 14px; padding: 8px 14px; box-shadow: 0 2px 10px rgba(0,0,0,.12); opacity: 0; animation: subIn .5s ease forwards; }
+  @keyframes subIn { from { opacity: 0; transform: translateY(14px) scale(.9); } to { opacity: 1; transform: none; } }
+  #confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 40; }
+  .bday { position: fixed; inset: 0; z-index: 35; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; pointer-events: none; opacity: 0; }
+  .bday.show { animation: bdayIn 5.6s ease forwards; }
+  .bday .big { font-size: 46px; font-weight: 800; line-height: 1.1; padding: 0 16px; background: linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 2px 6px rgba(0,0,0,.15)); }
+  .bday .emoji { font-size: 64px; margin-bottom: 8px; animation: wiggle .6s ease-in-out infinite alternate; }
+  @keyframes wiggle { from { transform: rotate(-12deg) scale(1); } to { transform: rotate(12deg) scale(1.15); } }
+  @keyframes bdayIn {
+    0%   { opacity: 0; transform: scale(.4); }
+    8%   { opacity: 1; transform: scale(1.1); }
+    13%  { transform: scale(1); }
+    88%  { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1.1); }
+  }
 </style>
 </head>
 <body>
@@ -103,7 +132,10 @@
 <div class="bio"><div class="full" id="fullname"></div><div id="bio"></div></div>
 
 <div class="actions">
-  <button class="btn primary" id="followBtn">Follow</button>
+  <div class="follow-wrap">
+    <div class="hint" id="hint">Push me! 👇</div>
+    <button class="btn primary pulse" id="followBtn">Follow</button>
+  </div>
   <button class="btn" id="msgBtn">Message</button>
 </div>
 
@@ -141,6 +173,13 @@
   <div class="date" id="vDate"></div>
 </div>
 
+<canvas id="confetti"></canvas>
+<div class="bday" id="bday">
+  <div class="emoji">🎂</div>
+  <div class="big">Happy Birthday<br>Gurl! 🎉</div>
+  <div class="subs" id="subs"></div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -148,12 +187,12 @@
    EDIT THIS PART ONLY — everything personal lives here
    ========================================================= */
 const CONFIG = {
-  username: "happy.birthday.name",     // shown at the top
-  fullname: "Friend's Full Name",       // bold name under the stats
-  bio: "🎂 Another year, another adventure\n📍 Jakarta\n✨ Made with love, just for you",
+  username: "Happy.Birthday.Celica",    // shown at the top
+  fullname: "Celica Gouw",              // bold name under the stats
+  bio: "🎂 Another year, another adventure\n📍 Palembang\n✨ Made with love, just for you",
   avatar: "images/avatar.jpg",          // profile picture
-  followers: "1,234",
-  following: "567",
+  followers: "1,105",
+  following: "25",
 
   // Round story-style circles under the buttons (optional, can be empty: [])
   highlights: [
@@ -198,7 +237,8 @@ const FALLBACKS = ["#feda75","#fa7e1e","#d62976","#962fbf","#4f5bd5","#0095f6"];
 
 function fallback(img, i, tall) {
   img.onerror = () => {
-    img.removeAttribute("src");
+    img.onerror = null;
+    img.src = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
     img.alt = "";
     img.style.background = `linear-gradient(135deg, ${FALLBACKS[i % 6]}, ${FALLBACKS[(i + 2) % 6]})`;
     if (tall) { img.style.minHeight = "360px"; img.style.width = "100%"; }
@@ -221,7 +261,68 @@ $("followBtn").onclick = () => {
   following = !following;
   $("followBtn").textContent = following ? "Following" : "Follow";
   $("followBtn").classList.toggle("primary", !following);
+  $("hint").classList.add("hide");
+  $("followBtn").classList.remove("pulse");
+  if (following) celebrate();
 };
+
+const LINES = [
+  "Level up complete! Loading new year... 100% 🔋",
+  "You're not old, you're limited edition ✨",
+  "Cake calories don't count today 🍰",
+  "Make a wish... then go eat the cake 🕯️",
+  "Warning: extreme fabulousness detected 💅",
+  "Today the whole universe is your fan club 🌟",
+  "Sending virtual hugs and real cake vibes 🤗",
+  "Another year of being iconic 👑",
+  "Age is just a number, but you're a VIP number 💖",
+  "Plot twist: you just get better every year 🎬",
+  "Party mode: ON 🎈 Diet mode: OFF 🙈"
+];
+
+// confetti + birthday message
+function celebrate() {
+  const b = $("bday");
+  const picks = LINES.slice().sort(() => Math.random() - .5).slice(0, 3);
+  $("subs").innerHTML = picks.map((t, k) => `<div style="animation-delay:${0.9 + k * 0.9}s">${t}</div>`).join("");
+  b.classList.remove("show"); void b.offsetWidth; b.classList.add("show");
+
+  const cv = $("confetti"), ctx = cv.getContext("2d");
+  const dpr = window.devicePixelRatio || 1;
+  cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
+  ctx.scale(dpr, dpr);
+  const colors = ["#feda75","#fa7e1e","#d62976","#962fbf","#4f5bd5","#0095f6","#ffffff","#ff3040"];
+  const W = innerWidth, H = innerHeight;
+  const pieces = Array.from({ length: 160 }, (_, k) => {
+    const fromLeft = k % 2 === 0;
+    return {
+      x: fromLeft ? 0 : W, y: H * 0.65,
+      vx: (fromLeft ? 1 : -1) * (4 + Math.random() * 9),
+      vy: -(8 + Math.random() * 12),
+      size: 6 + Math.random() * 7,
+      rot: Math.random() * 6.28, vr: (Math.random() - .5) * .4,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      round: Math.random() < .3
+    };
+  });
+  const start = performance.now();
+  (function frame(t) {
+    const elapsed = t - start;
+    ctx.clearRect(0, 0, W, H);
+    pieces.forEach(p => {
+      p.vy += 0.28; p.vx *= 0.99;
+      p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, 1 - elapsed / 5400);
+      ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+      ctx.fillStyle = p.color;
+      if (p.round) { ctx.beginPath(); ctx.arc(0, 0, p.size / 2, 0, 6.28); ctx.fill(); }
+      else ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+      ctx.restore();
+    });
+    if (elapsed < 5400) requestAnimationFrame(frame); else ctx.clearRect(0, 0, W, H);
+  })(start);
+}
 $("msgBtn").onclick = () => toast("Happy Birthday! 🎉");
 
 // highlights
