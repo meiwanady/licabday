@@ -36,10 +36,10 @@
   /* highlights */
   .highlights { display: flex; gap: 16px; overflow-x: auto; padding: 0 16px 14px; scrollbar-width: none; }
   .highlights::-webkit-scrollbar { display: none; }
-  .hl { text-align: center; flex: 0 0 auto; width: 64px; cursor: pointer; }
-  .hl .circle { width: 62px; height: 62px; border-radius: 50%; border: 1px solid #dbdbdb; padding: 3px; margin-bottom: 4px; }
+  .hl { text-align: center; flex: 0 0 auto; width: 80px; cursor: pointer; }
+  .hl .circle { width: 62px; height: 62px; border-radius: 50%; border: 1px solid #dbdbdb; padding: 3px; margin: 0 auto 4px; }
   .hl .circle img, .hl .circle div { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #efefef; display: flex; align-items: center; justify-content: center; font-size: 22px; }
-  .hl span { font-size: 12px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .hl span { font-size: 12px; display: block; line-height: 1.25; white-space: normal; overflow-wrap: anywhere; }
 
   /* tabs */
   .tabs { display: flex; border-top: 1px solid #dbdbdb; }
@@ -245,7 +245,7 @@ const CONFIG = {
   // One entry per photo. Add / remove blocks freely.
   posts: [
    {
-      img: "images/IMG-20260102-WA0048.jpg",
+      img: "images/IMG-20260102-WA0048.jpeg",
       caption: "Should we just do another nginep2? or tripppp?",
       date: "January 3, 2026",
       likes: 439
