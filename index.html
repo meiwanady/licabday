@@ -8,9 +8,10 @@
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: #fff; color: #262626; max-width: 480px; margin: 0 auto; min-height: 100vh;
+    background: #fff; color: #262626; max-width: 480px; margin: 0 auto; min-height: 100vh; padding-bottom: 90px;
   }
   svg { display: block; }
+  button { font-family: inherit; }
 
   /* top bar */
   .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; position: sticky; top: 0; background: #fff; z-index: 5; }
@@ -18,28 +19,53 @@
   .verified { width: 16px; height: 16px; }
 
   /* profile header */
-  .profile { display: flex; align-items: center; gap: 24px; padding: 8px 16px 12px; }
-  .avatar-ring { padding: 3px; border-radius: 50%; background: linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5); }
+  .profile { display: flex; align-items: center; gap: 24px; padding: 58px 16px 12px; }
+  .avatar-wrap { position: relative; flex: 0 0 auto; }
+  .avatar-ring { padding: 3px; border-radius: 50%; background: linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5); cursor: pointer; }
+  .avatar-ring.wig { animation: wig .4s ease; }
+  @keyframes wig { 0%,100% { transform: rotate(0) scale(1); } 25% { transform: rotate(-7deg) scale(1.05); } 75% { transform: rotate(7deg) scale(1.05); } }
   .avatar-ring .inner { background: #fff; padding: 3px; border-radius: 50%; }
   .avatar { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; background: #ddd; display: block; }
   .stats { display: flex; flex: 1; justify-content: space-around; text-align: center; }
   .stats b { display: block; font-size: 17px; }
   .stats span { font-size: 13px; }
 
+  /* IG note bubble */
+  .note { position: absolute; left: -6px; top: -48px; background: #fff; color: #262626; font-size: 11.5px; font-weight: 500; line-height: 1.25; padding: 7px 11px; border-radius: 16px; box-shadow: 0 1px 9px rgba(0,0,0,.25); cursor: pointer; white-space: nowrap; z-index: 2; animation: floaty 3.2s ease-in-out infinite; }
+  .note::after { content: ""; position: absolute; left: 20px; bottom: -8px; width: 9px; height: 9px; background: #fff; border-radius: 50%; box-shadow: 0 1px 4px rgba(0,0,0,.2); }
+  .note::before { content: ""; position: absolute; left: 14px; bottom: -14px; width: 5px; height: 5px; background: #fff; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+  .note span { display: inline-block; }
+  .note.swap span { animation: noteIn .35s ease; }
+  @keyframes noteIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+  @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+
+  /* party hat */
+  .hat { position: absolute; top: -22px; right: -4px; width: 44px; height: 50px; pointer-events: none; transform: rotate(16deg) scale(0); transform-origin: 50% 100%; transition: transform .6s cubic-bezier(.3,1.8,.5,1); z-index: 3; filter: drop-shadow(0 2px 3px rgba(0,0,0,.25)); }
+  .hat.on { transform: rotate(16deg) scale(1); }
+  .hat svg { width: 100%; height: 100%; }
+
   .bio { padding: 0 16px 12px; font-size: 14px; line-height: 1.4; white-space: pre-line; }
   .bio .full { font-weight: 600; }
 
-  .actions { display: flex; gap: 6px; padding: 0 16px 14px; }
+  .actions { display: flex; gap: 6px; padding: 0 16px 14px; margin-top: 30px; }
   .btn { flex: 1; border: 0; border-radius: 8px; padding: 8px; font-weight: 600; font-size: 14px; background: #efefef; color: #262626; cursor: pointer; }
   .btn.primary { background: #0095f6; color: #fff; }
 
   /* highlights */
-  .highlights { display: flex; gap: 16px; overflow-x: auto; padding: 0 16px 14px; scrollbar-width: none; }
+  .highlights { display: flex; gap: 12px; overflow-x: auto; padding: 0 16px 14px; scrollbar-width: none; }
   .highlights::-webkit-scrollbar { display: none; }
-  .hl { text-align: center; flex: 0 0 auto; width: 80px; cursor: pointer; }
-  .hl .circle { width: 62px; height: 62px; border-radius: 50%; border: 1px solid #dbdbdb; padding: 3px; margin: 0 auto 4px; }
+  .hl { text-align: center; flex: 0 0 auto; width: 80px; cursor: pointer; position: relative; }
+  .hl .circle { width: 62px; height: 62px; border-radius: 50%; border: 1px solid #dbdbdb; padding: 3px; margin: 0 auto 4px; transition: filter .4s, opacity .4s; }
   .hl .circle img, .hl .circle div { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #efefef; display: flex; align-items: center; justify-content: center; font-size: 22px; }
-  .hl span { font-size: 12px; display: block; line-height: 1.25; white-space: normal; overflow-wrap: anywhere; }
+  .hl span.lbl { font-size: 12px; display: block; line-height: 1.25; white-space: normal; overflow-wrap: anywhere; }
+  .hl .lock { display: none; position: absolute; top: 40px; left: calc(50% + 8px); width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 1px 5px rgba(0,0,0,.3); align-items: center; justify-content: center; font-size: 12px; }
+  .hl.locked .lock { display: flex; }
+  .hl.locked .circle { filter: grayscale(1); opacity: .55; }
+  .hl.locked { animation: none; }
+  .hl.shake { animation: shake .45s ease; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-6px); } 40% { transform: translateX(6px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(4px); } }
+  .hl.just-unlocked .circle { animation: unlockPop .9s ease; }
+  @keyframes unlockPop { 0% { transform: scale(.7); } 40% { transform: scale(1.25) rotate(8deg); } 70% { transform: scale(.95); } 100% { transform: scale(1); } }
 
   /* tabs */
   .tabs { display: flex; border-top: 1px solid #dbdbdb; }
@@ -61,10 +87,18 @@
   .phead { display: flex; align-items: center; gap: 10px; padding: 8px 12px; font-weight: 600; font-size: 14px; }
   .phead img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: #ddd; }
   .pimg { position: relative; width: 100%; background: #111; min-height: 200px; display: flex; justify-content: center; }
+  .imgbox { position: relative; display: flex; max-width: 100%; }
   .pimg img { display: block; width: auto; max-width: 100%; max-height: 56vh; max-height: 56dvh; object-fit: contain; }
   .heart-pop { position: absolute; top: 50%; left: 50%; width: 90px; height: 90px; margin: -45px 0 0 -45px; fill: #fff; opacity: 0; transform: scale(.3); pointer-events: none; filter: drop-shadow(0 2px 8px rgba(0,0,0,.4)); }
   .heart-pop.go { animation: pop .8s ease; }
   @keyframes pop { 0% {opacity:0; transform:scale(.3)} 20% {opacity:1; transform:scale(1.15)} 50% {transform:scale(.95)} 80% {opacity:1} 100% {opacity:0; transform:scale(1)} }
+
+  /* hidden hearts */
+  .hh { position: absolute; transform: translate(-50%,-50%); width: 38px; height: 38px; background: none; border: 0; font-size: 19px; line-height: 38px; text-align: center; cursor: pointer; opacity: .5; animation: twinkle 2.6s ease-in-out infinite; z-index: 3; filter: drop-shadow(0 0 3px rgba(255,255,255,.6)); }
+  @keyframes twinkle { 0%,100% { opacity: .28; transform: translate(-50%,-50%) scale(.9); } 50% { opacity: .75; transform: translate(-50%,-50%) scale(1.1); } }
+  .hh.got { animation: gotHeart .6s ease forwards; }
+  @keyframes gotHeart { 0% { opacity: 1; transform: translate(-50%,-50%) scale(1); } 40% { opacity: 1; transform: translate(-50%,-80%) scale(2.6); } 100% { opacity: 0; transform: translate(-50%,-180%) scale(3.4); } }
+
   .icons { display: flex; align-items: center; gap: 16px; padding: 10px 12px 4px; }
   .icons .spacer { flex: 1; }
   .icons button { background: none; border: 0; cursor: pointer; padding: 0; }
@@ -78,12 +112,12 @@
   .comments div { margin-bottom: 4px; }
   .date { padding: 4px 12px 24px; font-size: 11px; color: #737373; text-transform: uppercase; letter-spacing: .3px; }
 
-  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #262626; color: #fff; padding: 10px 18px; border-radius: 20px; font-size: 14px; opacity: 0; transition: opacity .3s; z-index: 30; pointer-events: none; }
+  .toast { position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%); background: #262626; color: #fff; padding: 10px 18px; border-radius: 20px; font-size: 14px; opacity: 0; transition: opacity .3s; z-index: 105; pointer-events: none; max-width: 90%; text-align: center; }
   .toast.show { opacity: 1; }
 
   /* story highlights + viewer */
   .hl.story .circle { border: 2px solid transparent; background: linear-gradient(#fff,#fff) padding-box, linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5) border-box; padding: 2px; }
-  .story-view { position: fixed; inset: 0; z-index: 50; background: #000; display: none; max-width: 480px; margin: 0 auto; }
+  .story-view { position: fixed; inset: 0; z-index: 50; background: #000; display: none; max-width: 480px; margin: 0 auto; overflow: hidden; }
   .story-view.open { display: block; }
   .story-view video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #000; }
   .s-top { position: absolute; top: 0; left: 0; right: 0; z-index: 3; padding: 12px 12px 24px; background: linear-gradient(rgba(0,0,0,.55), transparent); }
@@ -94,15 +128,21 @@
   .s-head img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: #555; }
   .s-head .grow { flex: 1; }
   .s-head button { background: none; border: 0; color: #fff; font-size: 22px; cursor: pointer; padding: 4px 6px; }
-  .s-tap { position: absolute; top: 70px; bottom: 0; z-index: 2; }
+  .s-tap { position: absolute; top: 70px; bottom: 84px; z-index: 2; }
   .s-tap.l { left: 0; width: 30%; } .s-tap.m { left: 30%; width: 40%; } .s-tap.r { right: 0; width: 30%; }
   .s-msg { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; text-align: center; color: #fff; font-size: 20px; font-weight: 700; padding: 24px; background: linear-gradient(135deg,#d62976,#962fbf,#4f5bd5); }
   .s-msg.show { display: flex; }
   .s-pause { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 56px; color: #fff; z-index: 3; display: none; pointer-events: none; text-shadow: 0 2px 10px rgba(0,0,0,.5); }
   .s-pause.show { display: block; }
 
+  /* story reactions */
+  .s-react { position: absolute; left: 0; right: 0; bottom: 18px; display: flex; justify-content: center; gap: 10px; padding: 0 10px; z-index: 4; }
+  .s-react button { width: 46px; height: 46px; border-radius: 50%; border: 1px solid rgba(255,255,255,.28); background: rgba(255,255,255,.14); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); font-size: 24px; cursor: pointer; transition: transform .12s; }
+  .s-react button:active { transform: scale(1.35); }
+  .s-float { position: absolute; bottom: 90px; font-size: 34px; z-index: 4; pointer-events: none; opacity: 0; animation: rise 2.2s ease-out forwards; }
+  @keyframes rise { 0% { opacity: 0; transform: translate(0,0) scale(.5); } 15% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx,0px), -55vh) scale(1.5); } }
+
   /* "Push me!" hint */
-  .actions { margin-top: 30px; }
   .follow-wrap { position: relative; flex: 1; display: flex; }
   .follow-wrap .btn { flex: 1; }
   .hint { position: absolute; left: 50%; top: -32px; transform: translateX(-50%); background: #262626; color: #fff; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 12px; white-space: nowrap; pointer-events: none; animation: bob 1s ease-in-out infinite; }
@@ -116,7 +156,7 @@
   .subs { margin-top: 16px; padding: 0 24px; display: flex; flex-direction: column; gap: 8px; }
   .subs div { font-size: 16px; font-weight: 700; color: #262626; background: rgba(255,255,255,.92); border-radius: 14px; padding: 8px 14px; box-shadow: 0 2px 10px rgba(0,0,0,.12); opacity: 0; animation: subIn .5s ease forwards; }
   @keyframes subIn { from { opacity: 0; transform: translateY(14px) scale(.9); } to { opacity: 1; transform: none; } }
-  #confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 60; }
+  #confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 120; }
   .bday { position: fixed; inset: 0; z-index: 35; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; pointer-events: none; opacity: 0; }
   .bday.show { animation: bdayIn 5.6s ease forwards; }
   .bday .big { font-size: 46px; font-weight: 800; line-height: 1.1; padding: 0 16px; background: linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 2px 6px rgba(0,0,0,.15)); }
@@ -158,6 +198,92 @@
   .sc-under.has-img .sc-msg { padding-top: 40px; background: linear-gradient(transparent, rgba(0,0,0,.7)); }
   .sc-cover { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: grab; }
   .sc-hint { font-size: 14px; color: #737373; text-align: center; }
+
+  /* ---------- cake / candles ---------- */
+  .cake-view { position: fixed; inset: 0; z-index: 56; display: none; flex-direction: column; max-width: 480px; margin: 0 auto; background: radial-gradient(circle at 50% 28%, #4a2370, #160a26 70%); color: #fff; overflow-y: auto; }
+  .cake-view.open { display: flex; }
+  .cake-view .vbar { background: transparent; }
+  .ck-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 8px 16px 28px; text-align: center; }
+  .ck-title { font-size: 22px; font-weight: 800; min-height: 54px; display: flex; align-items: center; justify-content: center; }
+  .cake-svg { width: min(100%, 340px); height: auto; overflow: visible; }
+  .ck-btn { flex: none; width: min(100%, 300px); padding: 12px; font-size: 15px; }
+  .ck-sub { font-size: 13px; opacity: .8; min-height: 18px; }
+  .flame { cursor: pointer; }
+  .flame .fl { transform-box: fill-box; transform-origin: 50% 100%; animation: flicker .5s ease-in-out infinite alternate; filter: drop-shadow(0 0 7px #fbbf24); transition: opacity .25s; }
+  @keyframes flicker { from { transform: scale(1,1) rotate(-3deg); } to { transform: scale(.9,1.1) rotate(3deg); } }
+  .flame.out .fl { opacity: 0; animation: none; }
+  .flame .smoke { fill: none; stroke: #cbd5e1; stroke-width: 3; stroke-linecap: round; opacity: 0; }
+  .flame.out .smoke { animation: smoke 1.8s ease-out forwards; }
+  @keyframes smoke { 0% { opacity: .85; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-34px); } }
+
+  /* ---------- quest: pill, sheet, modal, banner, finale ---------- */
+  .dock { position: fixed; left: 0; right: 0; bottom: 16px; max-width: 480px; margin: 0 auto; display: flex; justify-content: flex-end; padding: 0 16px; pointer-events: none; z-index: 8; }
+  .pill { pointer-events: auto; border: 0; cursor: pointer; background: #262626; color: #fff; font-weight: 700; font-size: 14px; padding: 11px 16px; border-radius: 999px; box-shadow: 0 4px 16px rgba(0,0,0,.3); display: flex; align-items: center; gap: 8px; }
+  .pill.bump { animation: pillBump .6s ease; }
+  .pill.attn { animation: pillAttn 1.6s ease-in-out infinite; }
+  .pill.max { background: linear-gradient(45deg,#fa7e1e,#d62976,#962fbf); }
+  @keyframes pillBump { 0% { transform: scale(1); } 40% { transform: scale(1.25); } 100% { transform: scale(1); } }
+  @keyframes pillAttn { 0%,100% { box-shadow: 0 4px 16px rgba(0,0,0,.3), 0 0 0 0 rgba(214,41,118,.55); } 50% { box-shadow: 0 4px 16px rgba(0,0,0,.3), 0 0 0 10px rgba(214,41,118,0); } }
+
+  .sheet-bg { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 80; opacity: 0; pointer-events: none; transition: opacity .3s; }
+  .sheet-bg.open { opacity: 1; pointer-events: auto; }
+  .sheet { position: fixed; left: 0; right: 0; bottom: 0; max-width: 480px; margin: 0 auto; max-height: 86vh; overflow-y: auto; background: #fff; border-radius: 20px 20px 0 0; z-index: 81; padding: 10px 18px 26px; transform: translateY(105%); transition: transform .4s cubic-bezier(.2,.9,.3,1); }
+  .sheet.open { transform: none; }
+  .grab { width: 40px; height: 4px; border-radius: 2px; background: #dbdbdb; margin: 0 auto 12px; }
+  .sh-head { display: flex; justify-content: space-between; align-items: center; font-size: 17px; font-weight: 800; margin-bottom: 8px; }
+  .sh-head span { font-size: 14px; color: #737373; font-weight: 700; }
+  .prog { height: 8px; background: #efefef; border-radius: 4px; overflow: hidden; margin-bottom: 6px; }
+  .prog i { display: block; height: 100%; width: 0; border-radius: 4px; background: linear-gradient(90deg,#feda75,#fa7e1e,#d62976,#962fbf); transition: width .7s cubic-bezier(.3,1.2,.5,1); }
+
+  .mlist { list-style: none; text-align: left; }
+  .mi { display: flex; gap: 12px; align-items: flex-start; padding: 11px 2px; border-bottom: 1px solid #f2f2f2; opacity: 0; animation: miIn .5s ease forwards; }
+  .mi:last-child { border-bottom: 0; }
+  @keyframes miIn { from { opacity: 0; transform: translateX(-14px); } to { opacity: 1; transform: none; } }
+  .mi .box { flex: 0 0 26px; width: 26px; height: 26px; border-radius: 8px; border: 2px solid #d4d4d4; display: flex; align-items: center; justify-content: center; transition: background .3s .15s, border-color .3s .15s; margin-top: 1px; }
+  .mi .box svg { width: 18px; height: 18px; stroke: #fff; stroke-width: 3.2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .mi .tick { stroke-dasharray: 24; stroke-dashoffset: 24; transition: stroke-dashoffset .5s .25s ease; }
+  .mi.done .box { background: #22c55e; border-color: #22c55e; }
+  .mi.done .tick { stroke-dashoffset: 0; }
+  .mi.pop .box { animation: boxPop .6s ease; }
+  @keyframes boxPop { 0% { transform: scale(1); } 40% { transform: scale(1.4) rotate(-8deg); } 100% { transform: scale(1); } }
+  .mi .ic { font-size: 20px; line-height: 26px; }
+  .mi .tx { flex: 1; }
+  .mi .t { font-size: 14.5px; font-weight: 700; line-height: 1.3; transition: color .3s; }
+  .mi.done .t { color: #9a9a9a; text-decoration: line-through; }
+  .mi .h { font-size: 12.5px; color: #737373; margin-top: 2px; line-height: 1.35; }
+  .mi.done .h { display: none; }
+  .sheet .btn { flex: none; width: 100%; margin-top: 12px; padding: 11px; }
+
+  .modal { position: fixed; inset: 0; z-index: 95; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.55); padding: 20px; }
+  .modal.open { display: flex; }
+  .m-card { width: min(100%, 380px); max-height: 90vh; overflow-y: auto; background: #fff; border-radius: 22px; padding: 22px 20px 18px; text-align: center; animation: mPop .45s cubic-bezier(.2,1.4,.4,1); }
+  @keyframes mPop { from { opacity: 0; transform: scale(.7); } to { opacity: 1; transform: none; } }
+  .m-emoji { font-size: 48px; margin-bottom: 4px; animation: wiggle .7s ease-in-out infinite alternate; display: inline-block; }
+  .m-card h3 { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+  .m-card p { font-size: 14.5px; line-height: 1.5; color: #404040; white-space: pre-line; }
+  .m-extra { margin: 10px 0 2px; }
+  .m-card .btn { flex: none; width: 100%; margin-top: 14px; padding: 12px; font-size: 15px; }
+
+  .ach { position: fixed; top: 12px; left: 50%; width: min(92%, 440px); transform: translate(-50%, -150%); background: #262626; color: #fff; border-radius: 16px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; z-index: 110; box-shadow: 0 8px 28px rgba(0,0,0,.4); transition: transform .55s cubic-bezier(.2,1.3,.4,1); pointer-events: none; }
+  .ach.show { transform: translate(-50%, 0); }
+  .ach .ac { flex: 0 0 38px; width: 38px; height: 38px; }
+  .ach .ac circle { fill: none; stroke: #22c55e; stroke-width: 2; stroke-dasharray: 63; stroke-dashoffset: 63; }
+  .ach .ac path { fill: none; stroke: #22c55e; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 24; stroke-dashoffset: 24; }
+  .ach.show .ac circle { animation: draw .55s .3s ease forwards; }
+  .ach.show .ac path { animation: draw .45s .75s ease forwards; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  .ach small { display: block; font-size: 10px; letter-spacing: 1px; font-weight: 700; color: #fbbf24; }
+  .ach b { display: block; font-size: 15px; line-height: 1.25; }
+  .ach .ad { font-size: 12.5px; opacity: .8; line-height: 1.3; }
+
+  .finale { position: fixed; inset: 0; z-index: 100; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 28px; background: linear-gradient(160deg,#d62976,#962fbf 55%,#4f5bd5); color: #fff; max-width: 480px; margin: 0 auto; }
+  .finale.open { display: flex; animation: fIn .6s ease; }
+  @keyframes fIn { from { opacity: 0; transform: scale(1.08); } to { opacity: 1; transform: none; } }
+  .finale .crown { font-size: 84px; animation: wiggle .8s ease-in-out infinite alternate; }
+  .finale h2 { font-size: 34px; font-weight: 800; line-height: 1.15; margin: 10px 0 14px; text-shadow: 0 2px 12px rgba(0,0,0,.25); }
+  .finale .fm { font-size: 17px; line-height: 1.55; white-space: pre-line; font-weight: 600; margin-bottom: 18px; }
+  .finale .badge { background: rgba(255,255,255,.2); border-radius: 999px; padding: 8px 16px; font-weight: 700; font-size: 14px; margin-bottom: 22px; }
+  .finale .btn { flex: none; width: min(100%, 280px); padding: 12px; font-size: 15px; background: #fff; color: #d62976; }
 </style>
 </head>
 <body>
@@ -170,7 +296,22 @@
 </div>
 
 <div class="profile">
-  <div class="avatar-ring"><div class="inner"><img id="avatar" class="avatar" alt=""></div></div>
+  <div class="avatar-wrap">
+    <div class="note" id="note"><span id="noteT"></span></div>
+    <div class="avatar-ring" id="avRing"><div class="inner"><img id="avatar" class="avatar" alt=""></div></div>
+    <div class="hat" id="hat">
+      <svg viewBox="0 0 60 70">
+        <defs>
+          <linearGradient id="hg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d62976"/><stop offset="1" stop-color="#962fbf"/></linearGradient>
+          <clipPath id="hc"><path d="M30 8 L56 64 L4 64Z"/></clipPath>
+        </defs>
+        <path d="M30 8 L56 64 L4 64Z" fill="url(#hg)"/>
+        <g clip-path="url(#hc)"><path d="M0 28 L60 42" stroke="#feda75" stroke-width="6"/><path d="M0 46 L60 60" stroke="#fff" stroke-width="6" opacity=".9"/></g>
+        <circle cx="30" cy="8" r="6.5" fill="#feda75"/>
+        <rect x="3" y="60" width="54" height="8" rx="4" fill="#feda75"/>
+      </svg>
+    </div>
+  </div>
   <div class="stats">
     <div><b id="sPosts"></b><span>posts</span></div>
     <div><b id="sFollowers"></b><span>followers</span></div>
@@ -198,6 +339,9 @@
 
 <div class="grid" id="grid"></div>
 
+<!-- quest pill -->
+<div class="dock"><button class="pill attn" id="qPill"><span id="qPillT">🎯 Quest 0/6</span></button></div>
+
 <!-- post viewer -->
 <div class="viewer" id="viewer">
   <div class="vbar">
@@ -206,7 +350,7 @@
   </div>
   <div class="phead"><img id="vAvatar" alt=""><span id="vUser"></span></div>
   <div class="pimg" id="vImgWrap">
-    <img id="vImg" alt="">
+    <div class="imgbox" id="vBox"><img id="vImg" alt=""></div>
     <svg class="heart-pop" id="heartPop" viewBox="0 0 24 24"><path d="M12 21s-8-5.2-8-11a4.6 4.6 0 018-3 4.6 4.6 0 018 3c0 5.8-8 11-8 11z"/></svg>
   </div>
   <div class="icons">
@@ -240,6 +384,7 @@
   <div class="s-tap l" id="sPrev"></div>
   <div class="s-tap m" id="sToggle"></div>
   <div class="s-tap r" id="sNext"></div>
+  <div class="s-react" id="sReact"></div>
 </div>
 
 <!-- secret scratch card -->
@@ -255,6 +400,67 @@
     </div>
     <div class="sc-hint" id="scHint">Scratch the glitter with your finger 👆</div>
   </div>
+</div>
+
+<!-- cake + candles -->
+<div class="cake-view" id="cake">
+  <div class="vbar">
+    <button class="back" id="ckBack" aria-label="Back"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <div class="title">Make a wish</div>
+  </div>
+  <div class="ck-body">
+    <div class="ck-title" id="ckTitle"></div>
+    <svg id="cakeSvg" class="cake-svg" viewBox="0 0 300 290">
+      <ellipse cx="150" cy="262" rx="135" ry="16" fill="#e5e7eb"/>
+      <rect x="40" y="176" width="220" height="82" rx="14" fill="#f472b6"/>
+      <rect x="40" y="176" width="220" height="20" rx="10" fill="#fff"/>
+      <circle cx="70" cy="200" r="7" fill="#fff"/><circle cx="112" cy="204" r="8" fill="#fff"/><circle cx="160" cy="201" r="7" fill="#fff"/><circle cx="205" cy="205" r="8" fill="#fff"/><circle cx="240" cy="200" r="6" fill="#fff"/>
+      <circle cx="75" cy="228" r="4" fill="#feda75"/><circle cx="125" cy="236" r="4" fill="#60a5fa"/><circle cx="175" cy="228" r="4" fill="#a78bfa"/><circle cx="225" cy="236" r="4" fill="#feda75"/>
+      <rect x="68" y="122" width="164" height="58" rx="12" fill="#c084fc"/>
+      <rect x="68" y="122" width="164" height="16" rx="8" fill="#fff"/>
+      <circle cx="95" cy="144" r="6" fill="#fff"/><circle cx="135" cy="146" r="7" fill="#fff"/><circle cx="180" cy="144" r="6" fill="#fff"/><circle cx="212" cy="146" r="6" fill="#fff"/>
+      <g id="candles"></g>
+    </svg>
+    <button class="btn primary ck-btn" id="ckMic">🎤 Blow into your phone</button>
+    <div class="ck-sub" id="ckSub"></div>
+  </div>
+</div>
+
+<!-- quest sheet -->
+<div class="sheet-bg" id="qBg"></div>
+<div class="sheet" id="qSheet">
+  <div class="grab"></div>
+  <div class="sh-head"><span style="color:#262626;font-size:17px;font-weight:800">🎯 Birthday Quest</span><span id="qCount"></span></div>
+  <div class="prog"><i id="qBar"></i></div>
+  <ul class="mlist" id="qList"></ul>
+  <button class="btn primary" id="qFinaleBtn" style="display:none">🎉 Replay the final surprise</button>
+  <button class="btn" id="qClose">Close</button>
+</div>
+
+<!-- generic modal -->
+<div class="modal" id="modal">
+  <div class="m-card">
+    <div class="m-emoji" id="mEmoji"></div>
+    <h3 id="mTitle"></h3>
+    <p id="mText"></p>
+    <div class="m-extra" id="mExtra"></div>
+    <button class="btn primary" id="mBtn">OK</button>
+  </div>
+</div>
+
+<!-- achievement banner -->
+<div class="ach" id="ach">
+  <svg class="ac" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M7 12.5l3.2 3.2L17 8.8"/></svg>
+  <div><small>ACHIEVEMENT UNLOCKED</small><b id="achT"></b><div class="ad" id="achD"></div></div>
+</div>
+
+<!-- finale -->
+<div class="finale" id="finale">
+  <div class="crown">👑</div>
+  <h2 id="fTitle"></h2>
+  <div class="fm" id="fMsg"></div>
+  <div class="badge">🏆 All missions complete</div>
+  <button class="btn" id="fClose">Keep exploring 💛</button>
 </div>
 
 <canvas id="confetti"></canvas>
@@ -287,23 +493,50 @@ const CONFIG = {
     message: "Surprise! 🎉\nDulu CEO2-an, but look now!\nTurns out, you are really the CEO! 💛"
   },
 
+  // IG-style "Note" bubble above the profile picture. Rotates every few seconds; tap to change.
+  // (Texts about missions disappear automatically once she has done them.)
+
+  // Hidden hearts: post = index of the post in the list below (0 = first post),
+  // x / y = position in % inside the photo (0-100). Move them around if one is too easy / too hard.
+  // The two "locked" highlights (From Mei, From Wepe) open only after ALL hearts are found.
+  hearts: [
+    { post: 1,  x: 90, y: 10 },
+    { post: 3,  x: 8,  y: 88 },
+    { post: 5,  x: 92, y: 80 },
+    { post: 8,  x: 50, y: 6  },
+    { post: 11, x: 7,  y: 20 },
+    { post: 14, x: 70, y: 90 },
+    { post: 17, x: 93, y: 45 }
+  ],
+
+  // Text of the final screen when every mission is done
+  finale: {
+    title: "Birthday Girl\nLevel: MAX",
+    message: "You found every surprise! 🎉\nHappy Birthday, Celica —\nwe're so glad you're in our lives 💛"
+  },
+
   // Round story-style circles under the buttons (optional, can be empty: [])
+  //  type:"cake"      -> opens the candles / make-a-wish screen
+  //  locked:true      -> stays locked until all hidden hearts are found
+  //  quest:"celebrate"-> watching all its videos counts as a mission
   highlights: [
-    { label: "From Mei",   emoji: "💌", img: "", videos: ["videos/20261031_150740_1.mp4"] },
-    { label: "From Wepe", emoji: "💛", img: "", videos: ["videos/wepe wish.mp4"] },
-    { label: "Celebrating You!",      emoji: "🎉", img: "" , videos: [
+    { label: "Make a wish", emoji: "🕯️", img: "", type: "cake" },
+    { label: "From Mei",   emoji: "💌", img: "", locked: true, videos: ["videos/20261031_150740_1.mp4"] },
+    { label: "From Wepe", emoji: "💛", img: "", locked: true, videos: ["videos/wepe wish.mp4"] },
+    { label: "Celebrating You!",      emoji: "🎉", img: "", quest: "celebrate", videos: [
       "videos/WhatsApp Video 2026-10-31 at 16.41.31.mp4",
       "videos/WhatsApp Video 2026-10-31 at 16.41.31 (1).mp4",
       "videos/WhatsApp Video 2026-10-31 at 16.41.31 (2).mp4",
-      "WhatsApp Video 2026-10-31 at 16.41.32.mp4",
-      "WhatsApp Video 2026-10-31 at 16.41.32 (1).mp4",
-      "WhatsApp Video 2026-10-31 at 16.41.32 (2).mp4",
-      "WhatsApp Video 2026-10-31 at 16.41.33.mp4",
-      "WhatsApp Video 2026-10-31 at 16.41.33 (1).mp4",
+      "videos/WhatsApp Video 2026-10-31 at 16.41.32.mp4",
+      "videos/WhatsApp Video 2026-10-31 at 16.41.32 (1).mp4",
+      "videos/WhatsApp Video 2026-10-31 at 16.41.32 (2).mp4",
+      "videos/WhatsApp Video 2026-10-31 at 16.41.33.mp4",
+      "videos/WhatsApp Video 2026-10-31 at 16.41.33 (1).mp4",
     ]}
   ],
 
   // One entry per photo. Add / remove blocks freely.
+  // NOTE: if you add/remove/reorder posts, update the "post" numbers in hearts above.
   posts: [
    {
       img: "images/IMG-20260102-WA0048.jpeg",
@@ -458,6 +691,16 @@ const CONFIG = {
 const $ = id => document.getElementById(id);
 const FALLBACKS = ["#feda75","#fa7e1e","#d62976","#962fbf","#4f5bd5","#0095f6"];
 
+/* ---------- saved progress (this device only) ---------- */
+// open the page with ?reset at the end of the URL to start from zero again
+const KEY = "celica-bday-quest-v1";
+const S = { done: {}, hearts: [], viewed: [], hat: false, intro: false };
+try {
+  if (location.search.indexOf("reset") > -1) localStorage.removeItem(KEY);
+  Object.assign(S, JSON.parse(localStorage.getItem(KEY) || "{}"));
+} catch (e) {}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+
 function fallback(img, i, tall) {
   img.onerror = () => {
     img.onerror = null;
@@ -468,7 +711,192 @@ function fallback(img, i, tall) {
   };
 }
 
-// header
+function toast(msg) {
+  const t = $("toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("show"), 1900);
+}
+
+/* ---------- confetti (one shared loop, many bursts allowed) ---------- */
+const cv = $("confetti"), cctx = cv.getContext("2d");
+let confW = 0, confH = 0, pieces = [], confRunning = false;
+function sizeConfetti() {
+  const dpr = window.devicePixelRatio || 1;
+  confW = innerWidth; confH = innerHeight;
+  cv.width = confW * dpr; cv.height = confH * dpr;
+  cctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+sizeConfetti(); addEventListener("resize", sizeConfetti);
+function confettiBurst(count) {
+  count = count || 160;
+  const colors = ["#feda75","#fa7e1e","#d62976","#962fbf","#4f5bd5","#0095f6","#ffffff","#ff3040"];
+  const born = performance.now();
+  for (let k = 0; k < count; k++) {
+    const fromLeft = k % 2 === 0;
+    pieces.push({
+      x: fromLeft ? 0 : confW, y: confH * 0.65,
+      vx: (fromLeft ? 1 : -1) * (4 + Math.random() * 9),
+      vy: -(8 + Math.random() * 12),
+      size: 6 + Math.random() * 7,
+      rot: Math.random() * 6.28, vr: (Math.random() - .5) * .4,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      round: Math.random() < .3, born
+    });
+  }
+  if (!confRunning) { confRunning = true; requestAnimationFrame(confTick); }
+}
+function confTick(t) {
+  cctx.clearRect(0, 0, confW, confH);
+  pieces = pieces.filter(p => t - p.born < 5400);
+  pieces.forEach(p => {
+    p.vy += 0.28; p.vx *= 0.99;
+    p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+    cctx.save();
+    cctx.globalAlpha = Math.min(1, Math.max(0, 1 - (t - p.born) / 5400));
+    cctx.translate(p.x, p.y); cctx.rotate(p.rot);
+    cctx.fillStyle = p.color;
+    if (p.round) { cctx.beginPath(); cctx.arc(0, 0, p.size / 2, 0, 6.28); cctx.fill(); }
+    else cctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+    cctx.restore();
+  });
+  if (pieces.length) requestAnimationFrame(confTick);
+  else { confRunning = false; cctx.clearRect(0, 0, confW, confH); }
+}
+
+/* =========================================================
+   QUEST SYSTEM
+   ========================================================= */
+const celebrateHL = CONFIG.highlights.find(h => h.quest === "celebrate");
+const MISSIONS = [
+  { id: "secret",    icon: "🎁", title: "Find the secret post",              hint: "One tile in the grid looks… different ✨",                              done: "You scratched your way to the secret post" },
+  { id: "hearts",    icon: "💛", title: "Collect all the hidden hearts",     hint: "Tiny hearts are hiding inside the photos. Open them and look closely 👀", done: "Messages from Mei & Wepe are now unlocked" },
+  { id: "follow",    icon: "🔔", title: "Push the Follow button",            hint: "It has been begging you since you arrived 👇",                            done: "Thanks for the follow, we love you too" },
+  { id: "candle",    icon: "🕯️", title: "Blow out the candles",              hint: "Open \"Make a wish\" under the buttons, and make a wish!",                done: "Hope your wish comes true 🌠" },
+  { id: "celebrate", icon: "🎬", title: "Watch every \"Celebrating You!\" video", hint: "Every single one, till the very last",                              done: "You've seen every wish made for you" },
+  { id: "hat",       icon: "🥳", title: "Put on your party hat",             hint: "Tap your profile picture 5 times",                                        done: "Looking absolutely fabulous" }
+];
+const allDone = () => MISSIONS.every(m => S.done[m.id]);
+const doneCount = () => MISSIONS.filter(m => S.done[m.id]).length;
+
+function progressText(id) {
+  if (id === "hearts") return S.hearts.length + "/" + CONFIG.hearts.length;
+  if (id === "celebrate" && celebrateHL) return S.viewed.length + "/" + celebrateHL.videos.length;
+  return "";
+}
+
+function complete(id) {
+  if (S.done[id]) return;
+  S.done[id] = true; save();
+  const m = MISSIONS.find(x => x.id === id);
+  banner(m.icon, m.title.replace(/\\"/g, '"'), m.done);
+  renderQuest(id);
+  if (id === "hearts") unlockHighlights(true);
+  if (allDone()) setTimeout(showFinale, 4200);
+}
+
+/* --- achievement banner (queued) --- */
+const achQ = []; let achBusy = false;
+function banner(icon, title, text) { achQ.push({ icon, title, text }); runAch(); }
+function runAch() {
+  if (achBusy || !achQ.length) return;
+  achBusy = true;
+  const a = achQ.shift(), el = $("ach");
+  $("achT").textContent = a.icon + " " + a.title;
+  $("achD").textContent = a.text;
+  el.classList.remove("show"); void el.offsetWidth; el.classList.add("show");
+  setTimeout(() => { el.classList.remove("show"); setTimeout(() => { achBusy = false; runAch(); }, 600); }, 3400);
+}
+
+/* --- pill + checklist sheet --- */
+let lastCount = -1, animated = {};
+function renderQuest(justId) {
+  const n = doneCount(), total = MISSIONS.length, pill = $("qPill");
+  $("qPillT").textContent = n === total ? "👑 Level MAX" : "🎯 Quest " + n + "/" + total;
+  pill.classList.toggle("max", n === total);
+  if (n !== lastCount && lastCount !== -1) { pill.classList.remove("bump"); void pill.offsetWidth; pill.classList.add("bump"); }
+  lastCount = n;
+  if ($("qSheet").classList.contains("open")) renderSheet();
+}
+function missionItems(ul, opts) {
+  ul.innerHTML = "";
+  MISSIONS.forEach((m, i) => {
+    const isDone = !!S.done[m.id];
+    const animateNow = opts.animate && isDone && !animated[m.id];
+    const li = document.createElement("li");
+    li.className = "mi" + (isDone && !animateNow ? " done" : "");
+    li.style.animationDelay = (i * 0.08) + "s";
+    const pt = !isDone ? progressText(m.id) : "";
+    li.innerHTML =
+      `<div class="box"><svg viewBox="0 0 24 24"><path class="tick" d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>` +
+      `<div class="ic">${m.icon}</div>` +
+      `<div class="tx"><div class="t">${m.title}${pt ? " (" + pt + ")" : ""}</div>` +
+      (opts.hints ? `<div class="h">${m.hint}</div>` : "") + `</div>`;
+    ul.appendChild(li);
+    if (animateNow) {
+      animated[m.id] = true;
+      setTimeout(() => li.classList.add("done", "pop"), 500 + i * 120);
+    }
+  });
+}
+function renderSheet() {
+  const n = doneCount(), total = MISSIONS.length;
+  $("qCount").textContent = n + " / " + total;
+  $("qBar").style.width = (n / total * 100) + "%";
+  missionItems($("qList"), { hints: true, animate: true });
+  $("qFinaleBtn").style.display = allDone() ? "block" : "none";
+}
+function openSheet() {
+  $("qPill").classList.remove("attn");
+  $("qBar").style.width = "0";
+  $("qBg").classList.add("open"); $("qSheet").classList.add("open");
+  renderSheet();
+}
+function closeSheet() { $("qBg").classList.remove("open"); $("qSheet").classList.remove("open"); }
+$("qPill").onclick = openSheet;
+$("qBg").onclick = closeSheet;
+$("qClose").onclick = closeSheet;
+$("qFinaleBtn").onclick = () => { closeSheet(); showFinale(); };
+
+/* --- modal --- */
+let modalClose = null;
+function modal(o) {
+  $("mEmoji").textContent = o.emoji || "✨";
+  $("mTitle").textContent = o.title || "";
+  $("mText").textContent = o.text || "";
+  $("mExtra").innerHTML = o.extra || "";
+  $("mBtn").textContent = o.btn || "OK";
+  modalClose = o.onClose || null;
+  $("modal").classList.add("open");
+}
+$("mBtn").onclick = () => { $("modal").classList.remove("open"); const f = modalClose; modalClose = null; if (f) f(); };
+
+/* --- intro: tells her about the missions --- */
+function showIntro() {
+  const ul = document.createElement("ul"); ul.className = "mlist";
+  missionItems(ul, { hints: false, animate: false });
+  modal({
+    emoji: "🎁",
+    title: "Happy Birthday, Celica!",
+    text: "This page is hiding a few little surprises just for you.\nComplete all " + MISSIONS.length + " mini-missions to unlock your final gift 👇",
+    extra: ul.outerHTML + `<p style="font-size:12.5px;color:#737373;margin-top:8px">Stuck? Tap the 🎯 button at the bottom anytime for hints and your checklist.</p>`,
+    btn: "Let's go! 🚀",
+    onClose: () => { S.intro = true; save(); }
+  });
+}
+
+/* --- finale --- */
+function showFinale() {
+  $("fTitle").textContent = CONFIG.finale.title;
+  $("fMsg").textContent = CONFIG.finale.message;
+  $("finale").classList.add("open");
+  confettiBurst(220);
+  let k = 0;
+  const iv = setInterval(() => { confettiBurst(120); if (++k >= 5) clearInterval(iv); }, 1100);
+}
+$("fClose").onclick = () => $("finale").classList.remove("open");
+
+/* =========================================================
+   PROFILE HEADER
+   ========================================================= */
 $("uname").textContent = CONFIG.username;
 $("fullname").textContent = CONFIG.fullname;
 $("bio").textContent = CONFIG.bio;
@@ -478,7 +906,48 @@ $("sFollowers").textContent = CONFIG.followers;
 $("sFollowing").textContent = CONFIG.following;
 document.title = CONFIG.username;
 
-// follow button
+/* --- IG Note bubble --- */
+const NOTES = [
+  { t: "🎂 It's your day!" },
+  { t: "Tap my face 5× 👀",         show: () => !S.hat },
+  { t: "Hunt the hidden 💛",         show: () => !S.done.hearts },
+  { t: "Push Follow! 👇",            show: () => !S.done.follow },
+  { t: "Blow the candles 🕯️",        show: () => !S.done.candle },
+  { t: "Tap 🎯 for your quest",      show: () => !allDone() },
+  { t: "👑 Level MAX!",              show: () => allDone() }
+];
+let noteIdx = 0, noteTimer = null;
+function showNote(first) {
+  const list = NOTES.filter(n => !n.show || n.show());
+  if (!first) noteIdx = (noteIdx + 1) % list.length;
+  const el = $("note"), t = list[noteIdx % list.length].t;
+  $("noteT").textContent = t;
+  el.classList.remove("swap"); void el.offsetWidth; el.classList.add("swap");
+}
+function startNotes() { clearInterval(noteTimer); noteTimer = setInterval(() => showNote(false), 4500); }
+$("note").onclick = () => { showNote(false); startNotes(); };
+
+/* --- avatar: tap 5x for a party hat --- */
+let avTaps = 0, avTimer = null;
+$("avRing").onclick = () => {
+  const r = $("avRing");
+  r.classList.remove("wig"); void r.offsetWidth; r.classList.add("wig");
+  if (S.hat) { confettiBurst(30); return; }
+  avTaps++;
+  clearTimeout(avTimer);
+  avTimer = setTimeout(() => { avTaps = 0; }, 1600);
+  if (avTaps === 3) toast("Keep going… 2 more taps 👀");
+  if (avTaps >= 5) {
+    avTaps = 0; S.hat = true; save();
+    $("hat").classList.add("on");
+    confettiBurst(120);
+    toast("🥳 Party hat on!");
+    complete("hat");
+    showNote(false);
+  }
+};
+
+/* --- follow button --- */
 let following = false;
 $("followBtn").onclick = () => {
   following = !following;
@@ -487,7 +956,7 @@ $("followBtn").onclick = () => {
   $("hint").classList.add("hide");
   $("followBtn").classList.remove("pulse");
   bumpFollowers(following);
-  if (following) celebrate();
+  if (following) { celebrate(); complete("follow"); }
 };
 
 const LINES = [
@@ -504,7 +973,6 @@ const LINES = [
   "Party mode: ON 🎈 Diet mode: OFF 🙈"
 ];
 
-// confetti + birthday message
 function celebrate() {
   const b = $("bday");
   const picks = LINES.slice().sort(() => Math.random() - .5).slice(0, 3);
@@ -512,58 +980,61 @@ function celebrate() {
   b.classList.remove("show"); void b.offsetWidth; b.classList.add("show");
   confettiBurst();
 }
-
-function confettiBurst() {
-  const cv = $("confetti"), ctx = cv.getContext("2d");
-  const dpr = window.devicePixelRatio || 1;
-  cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
-  ctx.scale(dpr, dpr);
-  const colors = ["#feda75","#fa7e1e","#d62976","#962fbf","#4f5bd5","#0095f6","#ffffff","#ff3040"];
-  const W = innerWidth, H = innerHeight;
-  const pieces = Array.from({ length: 160 }, (_, k) => {
-    const fromLeft = k % 2 === 0;
-    return {
-      x: fromLeft ? 0 : W, y: H * 0.65,
-      vx: (fromLeft ? 1 : -1) * (4 + Math.random() * 9),
-      vy: -(8 + Math.random() * 12),
-      size: 6 + Math.random() * 7,
-      rot: Math.random() * 6.28, vr: (Math.random() - .5) * .4,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      round: Math.random() < .3
-    };
-  });
-  const start = performance.now();
-  (function frame(t) {
-    const elapsed = t - start;
-    ctx.clearRect(0, 0, W, H);
-    pieces.forEach(p => {
-      p.vy += 0.28; p.vx *= 0.99;
-      p.x += p.vx; p.y += p.vy; p.rot += p.vr;
-      ctx.save();
-      ctx.globalAlpha = Math.max(0, 1 - elapsed / 5400);
-      ctx.translate(p.x, p.y); ctx.rotate(p.rot);
-      ctx.fillStyle = p.color;
-      if (p.round) { ctx.beginPath(); ctx.arc(0, 0, p.size / 2, 0, 6.28); ctx.fill(); }
-      else ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
-      ctx.restore();
-    });
-    if (elapsed < 5400) requestAnimationFrame(frame); else ctx.clearRect(0, 0, W, H);
-  })(start);
-}
 $("msgBtn").onclick = () => toast("Happy Birthday! 🎉");
 
-// highlights
+/* =========================================================
+   HIGHLIGHTS (with locks)
+   ========================================================= */
+function isLocked(h) { return !!h.locked && !S.done.hearts; }
 CONFIG.highlights.forEach(h => {
   const el = document.createElement("div");
-  el.className = "hl" + (h.videos && h.videos.length ? " story" : "");
-  el.innerHTML = `<div class="circle">${h.img ? `<img src="${h.img}" alt="">` : `<div>${h.emoji || "⭐"}</div>`}</div><span>${h.label}</span>`;
-  el.onclick = () => (h.videos && h.videos.length) ? openStory(h) : toast(h.label);
+  const hasVideos = h.videos && h.videos.length;
+  el.className = "hl" + ((hasVideos || h.type === "cake") ? " story" : "") + (isLocked(h) ? " locked" : "");
+  el.innerHTML = `<div class="circle">${h.img ? `<img src="${h.img}" alt="">` : `<div>${h.emoji || "⭐"}</div>`}</div><span class="lbl">${h.label}</span><span class="lock">🔒</span>`;
+  el.onclick = () => {
+    if (isLocked(h)) {
+      el.classList.remove("shake"); void el.offsetWidth; el.classList.add("shake");
+      const n = S.hearts.length, N = CONFIG.hearts.length;
+      modal({
+        emoji: "🔒",
+        title: "Not so fast!",
+        text: "Find the hidden hearts first 💛\n" + n + " of " + N + " found so far.\nHint: they're tiny, and they hide inside the photos in the grid.",
+        btn: "Okay, I'll hunt! 🔍"
+      });
+      return;
+    }
+    if (h.type === "cake") return openCake();
+    if (hasVideos) return openStory(h);
+    toast(h.label);
+  };
+  h._el = el;
   $("highlights").appendChild(el);
 });
 
-// grid
+function unlockHighlights(animate) {
+  const changed = [];
+  CONFIG.highlights.forEach(h => {
+    if (h.locked && h._el && h._el.classList.contains("locked")) {
+      h._el.classList.remove("locked");
+      if (animate) { h._el.classList.add("just-unlocked"); changed.push(h.label); }
+    }
+  });
+  if (animate) {
+    confettiBurst(140);
+    modal({
+      emoji: "💌",
+      title: "Unlocked!",
+      text: "All hearts found! 💛\nTwo new highlights are now open:\n" + (changed.join("  &  ") || "From Mei  &  From Wepe") + "\n\nGo back to the profile and tap them.",
+      btn: "Take me there 💛",
+      onClose: () => { if ($("viewer").classList.contains("open")) history.back(); }
+    });
+  }
+}
+
+/* =========================================================
+   GRID + POST VIEWER (+ hidden hearts)
+   ========================================================= */
 CONFIG.posts.forEach((p, i) => {
-  // the secret post: same shimmer tile, opens the scratch card
   if (CONFIG.secret && p.img === CONFIG.secret.img) {
     const sCell = document.createElement("div");
     sCell.className = "cell secret";
@@ -572,7 +1043,6 @@ CONFIG.posts.forEach((p, i) => {
     $("grid").appendChild(sCell);
     return;
   }
-
   const cell = document.createElement("div");
   cell.className = "cell";
   const img = document.createElement("img");
@@ -583,7 +1053,6 @@ CONFIG.posts.forEach((p, i) => {
   $("grid").appendChild(cell);
 });
 
-// viewer
 let current = 0, liked = {};
 function openPost(i) {
   current = i;
@@ -597,9 +1066,30 @@ function openPost(i) {
   $("vDate").textContent = p.date || "";
   $("vComments").innerHTML = (p.comments || []).map(c => `<div><b>${c.user}</b> ${c.text}</div>`).join("");
   renderLikes();
+  renderHearts(i);
   $("viewer").classList.add("open");
   $("viewer").scrollTop = 0;
   history.pushState({ post: i }, "");
+}
+function renderHearts(i) {
+  const box = $("vBox");
+  box.querySelectorAll(".hh").forEach(e => e.remove());
+  CONFIG.hearts.forEach((h, k) => {
+    if (h.post !== i || S.hearts.indexOf(k) > -1) return;
+    const b = document.createElement("button");
+    b.className = "hh"; b.textContent = "💛"; b.setAttribute("aria-label", "Hidden heart");
+    b.style.left = h.x + "%"; b.style.top = h.y + "%";
+    b.onclick = e => { e.stopPropagation(); foundHeart(k, b); };
+    box.appendChild(b);
+  });
+}
+function foundHeart(k, b) {
+  if (S.hearts.indexOf(k) > -1) return;
+  S.hearts.push(k); save();
+  b.classList.add("got"); setTimeout(() => b.remove(), 650);
+  const n = S.hearts.length, N = CONFIG.hearts.length;
+  if (n < N) { toast("💛 Heart found! " + n + "/" + N); renderQuest(); }
+  else { renderQuest(); complete("hearts"); }
 }
 function renderLikes() {
   const p = CONFIG.posts[current];
@@ -612,7 +1102,6 @@ $("backBtn").onclick = () => history.back();
 window.addEventListener("popstate", closePost);
 
 $("likeBtn").onclick = () => { liked[current] = !liked[current]; renderLikes(); };
-// double-tap to like
 let lastTap = 0;
 $("vImgWrap").addEventListener("click", () => {
   const now = Date.now();
@@ -623,7 +1112,9 @@ $("vImgWrap").addEventListener("click", () => {
   lastTap = now;
 });
 
-// ---------- story viewer (video highlights) ----------
+/* =========================================================
+   STORY VIEWER (+ emoji reactions + "watched all" tracking)
+   ========================================================= */
 let story = { h: null, i: 0, muted: false };
 const sv = $("sVideo");
 
@@ -647,13 +1138,22 @@ function playStory() {
   const p = sv.play();
   if (p && p.catch) p.catch(() => {});
 }
+function markViewed(idx) {
+  if (!story.h || story.h.quest !== "celebrate") return;
+  if (S.viewed.indexOf(idx) === -1) {
+    S.viewed.push(idx); save(); renderQuest();
+    if (S.viewed.length >= story.h.videos.length) complete("celebrate");
+  }
+}
 sv.addEventListener("timeupdate", () => {
   if (!sv.duration) return;
   const bar = $("sBars").querySelectorAll("i")[story.i];
   if (bar) bar.style.width = (sv.currentTime / sv.duration * 100) + "%";
+  if (sv.currentTime / sv.duration > 0.5) markViewed(story.i);
 });
-sv.addEventListener("ended", nextStory);
-sv.addEventListener("error", () => $("sMsg").classList.add("show"));
+sv.addEventListener("ended", () => { markViewed(story.i); nextStory(); });
+// a video that can't load shouldn't block the mission
+sv.addEventListener("error", () => { $("sMsg").classList.add("show"); markViewed(story.i); });
 sv.addEventListener("loadeddata", () => $("sMsg").classList.remove("show"));
 
 function nextStory() {
@@ -682,8 +1182,27 @@ $("sMute").onclick = () => {
 };
 window.addEventListener("popstate", closeStory);
 window.addEventListener("popstate", closeScratch);
+window.addEventListener("popstate", closeCake);
 
-// ---------- follower counter ----------
+// reactions
+["😍","🔥","😭","🥹","💛","👏"].forEach(emo => {
+  const b = document.createElement("button");
+  b.textContent = emo; b.setAttribute("aria-label", "React " + emo);
+  b.onclick = () => {
+    for (let k = 0; k < 7; k++) {
+      const s = document.createElement("span");
+      s.className = "s-float"; s.textContent = emo;
+      s.style.left = (12 + Math.random() * 72) + "%";
+      s.style.animationDelay = (k * 0.09) + "s";
+      s.style.setProperty("--dx", ((Math.random() - .5) * 90) + "px");
+      $("story").appendChild(s);
+      setTimeout(() => s.remove(), 2600);
+    }
+  };
+  $("sReact").appendChild(b);
+});
+
+/* ---------- follower counter ---------- */
 const baseFollowers = parseInt(String(CONFIG.followers).replace(/\D/g, ""), 10) || 0;
 function bumpFollowers(up) {
   const el = $("sFollowers");
@@ -705,7 +1224,9 @@ function floatHearts(host) {
   }
 }
 
-// ---------- secret scratch card ----------
+/* =========================================================
+   SECRET SCRATCH CARD
+   ========================================================= */
 const sc = { drawing: false, done: false, last: null, lastCheck: 0 };
 const scv = $("scCanvas"), sctx = scv.getContext("2d", { willReadFrequently: true });
 
@@ -769,6 +1290,7 @@ function revealScratch() {
   scv.style.transition = "opacity .7s ease"; scv.style.opacity = 0; scv.style.pointerEvents = "none";
   $("scHint").textContent = "You found it! 🎉";
   confettiBurst();
+  complete("secret");
 }
 scv.addEventListener("pointerdown", e => {
   sc.drawing = true; sc.last = [e.clientX, e.clientY];
@@ -786,10 +1308,154 @@ const endScratch = () => { if (!sc.drawing) return; sc.drawing = false; checkScr
 scv.addEventListener("pointerup", endScratch);
 scv.addEventListener("pointercancel", endScratch);
 
-function toast(msg) {
-  const t = $("toast"); t.textContent = msg; t.classList.add("show");
-  clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("show"), 1600);
+/* =========================================================
+   CAKE + CANDLES  (blow into the mic, or tap the flames)
+   ========================================================= */
+const CX = [90, 120, 150, 180, 210];
+const CC = ["#60a5fa", "#f472b6", "#fbbf24", "#34d399", "#a78bfa"];
+$("candles").innerHTML = CX.map((x, i) =>
+  `<g><rect x="${x - 4}" y="84" width="8" height="40" rx="2" fill="${CC[i]}"/>` +
+  `<rect x="${x - 4}" y="94" width="8" height="5" fill="#fff" opacity=".55"/><rect x="${x - 4}" y="108" width="8" height="5" fill="#fff" opacity=".55"/>` +
+  `<g class="flame" data-i="${i}" transform="translate(${x},80)">` +
+  `<g class="fl"><path d="M0 -26 C 9 -12, 9 0, 0 4 C -9 0, -9 -12, 0 -26Z" fill="#fbbf24"/><path d="M0 -14 C 4 -8, 4 -2, 0 2 C -4 -2, -4 -8, 0 -14Z" fill="#fb923c"/></g>` +
+  `<path class="smoke" d="M0 -6 C 7 -16, -7 -24, 0 -36"/>` +
+  `<circle r="22" cy="-10" fill="rgba(0,0,0,0.001)"/></g></g>`
+).join("");
+
+const cake = { out: 0, done: false, ac: null, stream: null, raf: 0, blow: 0, songGain: null };
+function getAC() {
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (!AC) throw new Error("no audio");
+  if (!cake.ac) cake.ac = new AC();
+  if (cake.ac.state === "suspended") cake.ac.resume();
+  return cake.ac;
 }
+function resetCandles() {
+  document.querySelectorAll(".flame").forEach(f => f.classList.remove("out"));
+  cake.out = 0; cake.done = false; cake.blow = 0;
+  $("ckTitle").textContent = "Make a wish… then blow them out! 🌠";
+  $("ckSub").textContent = "No mic? No problem — just tap the flames 👆";
+  $("ckMic").textContent = "🎤 Blow into your phone";
+}
+function openCake() {
+  try { getAC(); } catch (e) {}
+  resetCandles();
+  $("cake").classList.add("open");
+  history.pushState({ cake: true }, "");
+}
+function closeCake() {
+  if (!$("cake").classList.contains("open")) return;
+  stopMic(); stopSong();
+  $("cake").classList.remove("open");
+}
+$("ckBack").onclick = () => history.back();
+
+function snuffNext() {
+  const f = document.querySelector(".flame:not(.out)");
+  if (f) snuff(f);
+}
+function snuff(f) {
+  if (f.classList.contains("out")) return;
+  f.classList.add("out"); cake.out++;
+  if (cake.out >= CX.length) cakeDone();
+}
+document.querySelectorAll(".flame").forEach(f => f.addEventListener("click", () => snuff(f)));
+
+function cakeDone() {
+  if (cake.done) return;
+  cake.done = true;
+  stopMic();
+  $("ckTitle").textContent = "Happy Birthday, Celica! 🎉";
+  $("ckSub").textContent = "Did you make a wish? 🌠";
+  $("ckMic").textContent = "🔥 Light them again";
+  confettiBurst(220);
+  playSong();
+  complete("candle");
+}
+
+async function startMic() {
+  if (cake.stream) return;
+  try {
+    const ac = getAC();
+    cake.stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+    const src = ac.createMediaStreamSource(cake.stream);
+    const an = ac.createAnalyser(); an.fftSize = 512;
+    src.connect(an);
+    cake.src = src;
+    const buf = new Uint8Array(an.fftSize);
+    let last = performance.now();
+    $("ckSub").textContent = "Listening… take a deep breath and blow! 💨";
+    $("ckMic").textContent = "🎤 Listening…";
+    const loop = now => {
+      const dt = Math.min(0.1, (now - last) / 1000); last = now;
+      an.getByteTimeDomainData(buf);
+      let sum = 0;
+      for (let i = 0; i < buf.length; i++) { const v = (buf[i] - 128) / 128; sum += v * v; }
+      const rms = Math.sqrt(sum / buf.length);
+      if (rms > 0.12) cake.blow += dt; else cake.blow = Math.max(0, cake.blow - dt * 2);
+      const target = Math.min(CX.length, Math.floor(cake.blow / 0.22));
+      while (cake.out < target && !cake.done) snuffNext();
+      cake.raf = requestAnimationFrame(loop);
+    };
+    cake.raf = requestAnimationFrame(loop);
+  } catch (e) {
+    cake.stream = null;
+    $("ckMic").textContent = "🎤 Try the mic again";
+    $("ckSub").textContent = "Mic is blocked — no worries, tap the flames instead 👆";
+  }
+}
+function stopMic() {
+  cancelAnimationFrame(cake.raf);
+  if (cake.stream) { cake.stream.getTracks().forEach(t => t.stop()); cake.stream = null; }
+  if (cake.src) { try { cake.src.disconnect(); } catch (e) {} cake.src = null; }
+}
+$("ckMic").onclick = () => {
+  if (cake.done) { stopSong(); resetCandles(); return; }
+  startMic();
+};
+
+// "Happy Birthday" on a soft synth
+function playSong() {
+  try {
+    const ac = getAC(); stopSong();
+    const g = ac.createGain(); g.gain.value = 0.22; g.connect(ac.destination); cake.songGain = g;
+    const N = [
+      [392,.75],[392,.25],[440,1],[392,1],[523.25,1],[493.88,2],
+      [392,.75],[392,.25],[440,1],[392,1],[587.33,1],[523.25,2],
+      [392,.75],[392,.25],[783.99,1],[659.25,1],[523.25,1],[493.88,1],[440,2],
+      [698.46,.75],[698.46,.25],[659.25,1],[523.25,1],[587.33,1],[523.25,2]
+    ];
+    let t = ac.currentTime + 0.15; const beat = 0.42;
+    N.forEach(([f, d]) => {
+      const o = ac.createOscillator(), e = ac.createGain();
+      o.type = "triangle"; o.frequency.value = f;
+      o.connect(e); e.connect(g);
+      e.gain.setValueAtTime(0.0001, t);
+      e.gain.linearRampToValueAtTime(1, t + 0.03);
+      e.gain.exponentialRampToValueAtTime(0.001, t + d * beat * 0.95);
+      o.start(t); o.stop(t + d * beat);
+      t += d * beat;
+    });
+  } catch (e) {}
+}
+function stopSong() {
+  if (cake.songGain) { try { cake.songGain.disconnect(); } catch (e) {} cake.songGain = null; }
+}
+
+/* =========================================================
+   START
+   ========================================================= */
+if (S.hat) $("hat").classList.add("on");
+if (S.done.secret) {
+  sc.done = true;
+  $("scUnder").classList.add("revealed");
+  scv.style.opacity = 0; scv.style.pointerEvents = "none";
+  $("scHint").textContent = "You found it! 🎉";
+}
+renderQuest();
+showNote(true); startNotes();
+if (!S.intro) setTimeout(showIntro, 700);
+else if (!allDone()) $("qPill").classList.add("attn");
 </script>
 </body>
 </html>
