@@ -435,6 +435,7 @@
   <ul class="mlist" id="qList"></ul>
   <button class="btn primary" id="qFinaleBtn" style="display:none">🎉 Replay the final surprise</button>
   <button class="btn" id="qClose">Close</button>
+  <button class="btn" id="qReset" style="color:#d62976">🔄 Play again from the start</button>
 </div>
 
 <!-- generic modal -->
@@ -854,6 +855,11 @@ function closeSheet() { $("qBg").classList.remove("open"); $("qSheet").classList
 $("qPill").onclick = openSheet;
 $("qBg").onclick = closeSheet;
 $("qClose").onclick = closeSheet;
+$("qReset").onclick = () => {
+  if (!confirm("Reset all achievements and replay every surprise?")) return;
+  try { localStorage.setItem(KEY, JSON.stringify({ intro: true })); } catch (e) {}
+  location.href = location.pathname;
+};
 $("qFinaleBtn").onclick = () => { closeSheet(); showFinale(); };
 
 /* --- modal --- */
