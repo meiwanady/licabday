@@ -500,14 +500,15 @@ const CONFIG = {
   // Hidden hearts: post = index of the post in the list below (0 = first post),
   // x / y = position in % inside the photo (0-100). Move them around if one is too easy / too hard.
   // The two "locked" highlights (From Mei, From Wepe) open only after ALL hearts are found.
+  // NOTE: posts were re-ordered when the 15 new photos were mixed in, so these numbers were updated.
   hearts: [
-    { post: 1,  x: 90, y: 10 },
-    { post: 3,  x: 8,  y: 88 },
-    { post: 5,  x: 92, y: 80 },
-    { post: 8,  x: 50, y: 6  },
-    { post: 11, x: 7,  y: 20 },
-    { post: 14, x: 70, y: 90 },
-    { post: 17, x: 93, y: 45 }
+    { post: 3,  x: 90, y: 10 },   // "Just us three"
+    { post: 7,  x: 8,  y: 88 },   // "Glam squad snack break"
+    { post: 11, x: 92, y: 80 },   // "Veil, tiara, and the smol cake"
+    { post: 17, x: 50, y: 6  },   // "Celorist era"
+    { post: 23, x: 7,  y: 20 },   // "Chasing waterfalls"
+    { post: 29, x: 70, y: 90 },   // "Gojek photoshoot"
+    { post: 32, x: 93, y: 45 }    // "Gravity? Never heard of her"
   ],
 
   // Text of the final screen when every mission is done
@@ -538,13 +539,30 @@ const CONFIG = {
 
   // One entry per photo. Add / remove blocks freely.
   // NOTE: if you add/remove/reorder posts, update the "post" numbers in hearts above.
+  // The 15 posts from Winda (images/00000633 ... 00000647) are mixed in between the older ones.
   posts: [
-   {
+    // 0  — NEW (Winda, 647)
+    {
+      img: "images/00000647-PHOTO-2026-11-02-14-15-14.jpg",
+      caption: "Girl is 25 now🎂🎂🎂🎂",
+      date: "",
+      likes: 1025
+    },
+    // 1
+    {
       img: "images/IMG-20260102-WA0048.jpeg",
       caption: "Should we just do another nginep2? or tripppp?",
       date: "January 3, 2026",
       likes: 439
     },
+    // 2  — NEW (Winda, 641)
+    {
+      img: "images/00000641-PHOTO-2026-11-02-14-15-13.jpg",
+      caption: "To many more zoom and gmeet sessions?",
+      date: "",
+      likes: 358
+    },
+    // 3  — heart
     {
       img: "images/IMG-20250505-WA0023.jpg",
       caption: "Just us three....👀",
@@ -552,6 +570,14 @@ const CONFIG = {
       likes: 439,
       comments: [{ user: "eimeimeimei", text: "si bungsu yang bukan real bungsu 😂" }]
     },
+    // 4  — NEW (Winda, 633)
+    {
+      img: "images/00000633-PHOTO-2026-11-02-14-15-09.jpg",
+      caption: "Another bucket list checked✅",
+      date: "",
+      likes: 412
+    },
+    // 5
     {
       img: "images/20260102_184310.jpg",
       caption: "Pose first, order later ✌️🍕",
@@ -559,6 +585,14 @@ const CONFIG = {
       likes: 267,
       comments: [{ user: "ce wep", text: "Hand-under-chin is a lifestyle 💅" }]
     },
+    // 6  — NEW (Winda, 644)
+    {
+      img: "images/00000644-PHOTO-2026-11-02-14-15-14.jpg",
+      caption: "Ubud was ubud-ing",
+      date: "",
+      likes: 503
+    },
+    // 7  — heart
     {
       img: "images/20250601_145158.jpg",
       caption: "Glam squad snack break 🥤👗",
@@ -566,6 +600,14 @@ const CONFIG = {
       likes: 351,
       comments: [{ user: "eimeimeimei", text: "Beauty is pain, snacks are survival 🍜" }]
     },
+    // 8  — NEW (Winda, 638)
+    {
+      img: "images/00000638-PHOTO-2026-11-02-14-15-12.jpg",
+      caption: "Long long long time agoooooo",
+      date: "",
+      likes: 296
+    },
+    // 9
     {
       img: "images/20250601_115552.jpg",
       caption: "Main character lighting 💍✨",
@@ -573,6 +615,14 @@ const CONFIG = {
       likes: 988,
       comments: [{ user: "eimeimeimei", text: "the best photo i took from the wedding tho 😭🤍" }]
     },
+    // 10 — NEW (Winda, 635)
+    {
+      img: "images/00000635-PHOTO-2026-11-02-14-15-11.jpg",
+      caption: "Life choices…",
+      date: "",
+      likes: 674
+    },
+    // 11 — heart
     {
       img: "images/IMG-20250305-WA0020.jpg",
       caption: "Veil, tiara, and the smol cake 👰🏻🍰",
@@ -580,6 +630,14 @@ const CONFIG = {
       likes: 777,
       comments: [{ user: "besties", text: "the cake was too cute to be remembered 🥹" }]
     },
+    // 12 — NEW (Winda, 645)
+    {
+      img: "images/00000645-PHOTO-2026-11-02-14-15-14.jpg",
+      caption: "Ready to rock the world",
+      date: "",
+      likes: 531
+    },
+    // 13
     {
       img: "images/IMG-20250224-WA0009.jpg",
       caption: "Hair & makeup done, and u look pwetty 💄✨",
@@ -587,6 +645,14 @@ const CONFIG = {
       likes: 502,
       comments: [{ user: "bestie", text: "Glow level: unreal" }]
     },
+    // 14 — NEW (Winda, 636)
+    {
+      img: "images/00000636-PHOTO-2026-11-02-14-15-11.jpg",
+      caption: "I wonder what the letter was about👉🏻👈🏻",
+      date: "",
+      likes: 389
+    },
+    // 15
     {
       img: "images/IMG-20241001-WA0010.jpg",
       caption: "Do not disturb, serious eating in progress 🍱🤫",
@@ -594,6 +660,14 @@ const CONFIG = {
       likes: 226,
       comments: [{ user: "emimeimeimei", text: "kinda forget when did i took this photo? maybe u can recall? 😂" }]
     },
+    // 16 — NEW (Winda, 640)
+    {
+      img: "images/00000640-PHOTO-2026-11-02-14-15-12.jpg",
+      caption: "Me looking at her..",
+      date: "May 31, 2025",
+      likes: 344
+    },
+    // 17 — heart
     {
       img: "images/IMG-20240814-WA0001.jpg",
       caption: "Celorist era: certified 🎓💐",
@@ -601,6 +675,14 @@ const CONFIG = {
       likes: 689,
       comments: [{ user: "ce wepe", text: "Love to be in one of your celorist's journeys 💛" }]
     },
+    // 18 — NEW (Winda, 643)
+    {
+      img: "images/00000643-PHOTO-2026-11-02-14-15-13.jpg",
+      caption: "Late night convoooo",
+      date: "",
+      likes: 457
+    },
+    // 19
     {
       img: "images/IMG-20240812-WA0010.jpg",
       caption: "Late-night car rides hit different 🚗🌙",
@@ -608,6 +690,14 @@ const CONFIG = {
       likes: 258,
       comments: [{ user: "emeimeimei", text: "kok saya tidak di ajak ya?!" }]
     },
+    // 20 — NEW (Winda, 634)
+    {
+      img: "images/00000634-PHOTO-2026-11-02-14-15-10.jpg",
+      caption: "When is next?",
+      date: "",
+      likes: 318
+    },
+    // 21
     {
       img: "images/IMG-20240718-WA0002.jpg",
       caption: "Jaman baheulakkkk pas ultah meilia",
@@ -615,6 +705,14 @@ const CONFIG = {
       likes: 304,
       comments: [{ user: "eimeimeimei", text: "thanks for coming to me 17th bday hahaha" }]
     },
+    // 22 — NEW (Winda, 639)
+    {
+      img: "images/00000639-PHOTO-2026-11-02-14-15-12.jpg",
+      caption: "Wearing the lanyard with prideeee",
+      date: "",
+      likes: 482
+    },
+    // 23 — heart
     {
       img: "images/IMG-20240527-WA0026.jpg",
       caption: "Chasing waterfalls (and good photo spots) 💦🌿",
@@ -622,6 +720,14 @@ const CONFIG = {
       likes: 463,
       comments: [{ user: "bestie", text: "Slippery rocks, steady poses 😎 Pengen lagiiii, next korea" }]
     },
+    // 24 — NEW (Winda, 646)
+    {
+      img: "images/00000646-PHOTO-2026-11-02-14-15-14.jpg",
+      caption: "Guess the place☝🏻",
+      date: "",
+      likes: 275
+    },
+    // 25
     {
       img: "images/IMG-20240524-WA0011.jpg",
       caption: "Life jackets on, golden hour on 🌅⛵",
@@ -629,6 +735,14 @@ const CONFIG = {
       likes: 576,
       comments: [{ user: "me", text: "Peak sky, peak friends" }]
     },
+    // 26 — NEW (Winda, 642)
+    {
+      img: "images/00000642-PHOTO-2026-11-02-14-15-13.jpg",
+      caption: "Finally it’s in palembang?!!!?",
+      date: "",
+      likes: 391
+    },
+    // 27
     {
       img: "images/20240524_171003.jpg",
       caption: "Presenting: the view. And the bed. Mostly the bed 🛏️🌾",
@@ -636,6 +750,14 @@ const CONFIG = {
       likes: 604,
       comments: [{ user: "bestie", text: "Can we move in??" }]
     },
+    // 28 — NEW (Winda, 637)
+    {
+      img: "images/00000637-PHOTO-2026-11-02-14-15-11.jpg",
+      caption: "Somebody took this selfie with my phone, does she remember when was this?👀",
+      date: "",
+      likes: 366
+    },
+    // 29 — heart
     {
       img: "images/20240522_195610.jpg",
       caption: "Gojek photoshoot, no extra charge 🛵✌️",
@@ -643,6 +765,7 @@ const CONFIG = {
       likes: 287,
       comments: [{ user: "me", text: "The driver deserves a tip AND a credit 😭" }]
     },
+    // 30
     {
       img: "images/20240522_182143.jpg",
       caption: "Sunset, sand, and the best company 🌅",
@@ -650,6 +773,7 @@ const CONFIG = {
       likes: 530,
       comments: [{ user: "me", text: "Our hair said 'wind' and we said 'okay' 😂" }]
     },
+    // 31
     {
       img: "images/IMG-20231228-WA0009.jpg",
       caption: "Pout squad reporting for duty 😚🌕",
@@ -657,6 +781,7 @@ const CONFIG = {
       likes: 392,
       comments: [{ user: "bestie", text: "Who gave us a spotlight 😂" }]
     },
+    // 32 — heart
     {
       img: "images/IMG-20231228-WA0008.jpg",
       caption: "Gravity? Never heard of her 🚀🤍",
@@ -664,6 +789,7 @@ const CONFIG = {
       likes: 845,
       comments: [{ user: "me", text: "Perfect jump timing, 10/10" }]
     },
+    // 33
     {
       img: "images/IMG-20230604-WA0001.jpg",
       caption: "School days: uniforms on, laughter unstoppable 🤣🎒",
@@ -671,6 +797,7 @@ const CONFIG = {
       likes: 318,
       comments: [{ user: "bestie", text: "The braces era, we remember 😭 the ketua osis'es" }]
     },
+    // 34
     {
       img: "images/IMG-20230516-WA0021.jpg",
       caption: "Throwback to the HBD collage that started the online virtual gifts? 🎨",
@@ -678,6 +805,7 @@ const CONFIG = {
       likes: 721,
       comments: [{ user: "eimeimeimei", text: "Still the best card ever made 🥹" }]
     },
+    // 35 — secret scratch card tile (keep last)
     {
       img: "images/20171026_155457.jpg",
       caption: "Name tag on, smile on 🏷️😄",
